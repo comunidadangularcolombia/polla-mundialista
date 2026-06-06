@@ -1,0 +1,24 @@
+<nav class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16">
+  <div class="flex items-center gap-xl">
+    <div class="font-headline-md text-headline-md font-black text-primary dark:text-primary-fixed">
+      PollaMundialista
+    </div>
+  </div>
+  
+  <div class="flex items-center gap-md">
+    <!-- Points Badge -->
+    <span class="font-label-md text-label-md text-secondary dark:text-secondary-fixed bg-secondary-container px-sm py-xs rounded-full hidden sm:inline-block">
+      Puntos: {{ stats().totalPoints | number }}
+    </span>
+    
+    <!-- Notification Bell -->
+    <button class="p-xs text-on-surface-variant hover:text-secondary transition-colors cursor-pointer active:opacity-80 rounded-full hover:bg-surface-container-low" aria-label="Notificaciones" id="navbar-notif-btn">
+      <span class="material-symbols-outlined">notifications</span>
+    </button>
+    
+    <!-- User Avatar -->
+    <div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden cursor-pointer hover:opacity-90" id="navbar-profile-avatar">
+      <img [src]="profile().avatar" alt="Foto de perfil del usuario" class="w-full h-full object-cover">
+    </div>
+  </div>
+</nav>

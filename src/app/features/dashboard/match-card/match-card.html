@@ -1,0 +1,173 @@
+<article 
+  [class]="match().status === 'scheduled' 
+    ? 'bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden hover:shadow-md hover:border-secondary transition-all flex flex-col justify-between min-h-[280px]' 
+    : 'bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden opacity-95 relative flex flex-col justify-between min-h-[240px]'"
+  [attr.id]="'match-card-' + match().id">
+
+  <!-- Status / Time header -->
+  @if (match().status === 'live') {
+    <div class="absolute top-md left-md bg-on-tertiary-container text-on-tertiary font-label-md text-label-md px-3 py-1 rounded-full flex items-center gap-xs shadow-sm font-bold">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-tertiary opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-on-tertiary"></span>
+      </span> 
+      EN VIVO
+    </div>
+  } @else if (match().status === 'finished') {
+    <div class="absolute top-md right-md bg-inverse-surface text-inverse-on-surface font-label-md text-label-md px-3 py-1 rounded-full font-bold">
+      FINALIZADO (FT)
+    </div>
+  } @else {
+    <div class="text-center font-label-md text-label-md text-secondary bg-secondary-container/20 py-1 rounded-t-xl font-bold uppercase tracking-widest">
+      {{ match().scheduledAt }}
+    </div>
+  }
+
+  <!-- Body -->
+  <div class="p-lg flex-grow flex flex-col justify-center gap-md">
+    <!-- Match Teams and Core Scores -->
+    <div class="flex justify-between items-center mt-md">
+      <!-- Home Team -->
+      <div class="flex flex-col items-center gap-md flex-1">
+        <div class="w-14 h-14 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center font-headline-md text-headline-md text-primary shadow-sm font-bold">
+          {{ match().homeFlag || match().homeTeam.substring(0,2).toUpperCase() }}
+        </div>
+        <span class="font-title-lg text-title-lg text-on-surface text-center font-semibold">{{ match().homeTeam }}</span>
+      </div>
+
+      <!-- Center section: Score or VS -->
+      <div class="flex flex-col items-center justify-center flex-1">
+        @if (match().status === 'live') {
+          <div class="font-display-lg text-display-lg text-primary flex items-center gap-md font-black">
+            <span>{{ match().homeScore }}</span>
+            <span class="text-outline-variant font-headline-md">-</span>
+            <span>{{ match().awayScore }}</span>
+          </div>
+          <span class="font-mono-stats text-mono-stats text-secondary bg-secondary-container/30 px-3 py-0.5 rounded-full font-bold">
+            {{ match().minute }}'
+          </span>
+        } @else if (match().status === 'finished') {
+          <div class="font-display-lg text-display-lg text-on-surface-variant flex items-center gap-md font-black">
+            <span>{{ match().homeScore }}</span>
+            <span class="text-outline-variant font-headline-md">-</span>
+            <span>{{ match().awayScore }}</span>
+          </div>
+        } @else {
+          <span class="font-label-md text-label-md text-outline font-black uppercase tracking-widest">VS</span>
+        }
+      </div>
+
+      <!-- Away Team -->
+      <div class="flex flex-col items-center gap-md flex-1">
+        <div class="w-14 h-14 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center font-headline-md text-headline-md text-primary shadow-sm font-bold">
+          {{ match().awayFlag || match().awayTeam.substring(0,2).toUpperCase() }}
+        </div>
+        <span class="font-title-lg text-title-lg text-on-surface text-center font-semibold">{{ match().awayTeam }}</span>
+      </div>
+    </div>
+
+    <!-- Error Alerts -->
+    @if (errorDetails()) {
+      <div class="mt-sm bg-error-container text-on-error-container border border-error/20 rounded-lg p-sm font-body-md text-center flex items-center gap-sm justify-center" id="card-error-msg">
+        <span class="material-symbols-outlined text-md">error</span>
+        <span>{{ errorDetails()?.error }}</span>
+      </div>
+    }
+
+    <!-- Success Message -->
+    @if (successMsg()) {
+      <div class="mt-sm bg-secondary-container text-on-secondary-container border border-secondary/20 rounded-lg p-sm font-body-md text-center flex items-center gap-sm justify-center" id="card-success-msg">
+        <span class="material-symbols-outlined text-md">check_circle</span>
+        <span>{{ successMsg() }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Bottom actions / prediction lock info -->
+  <div class="border-t border-outline-variant bg-surface-container-low/50">
+    @if (match().status === 'scheduled') {
+      <div class="p-lg flex flex-col gap-md">
+        <!-- Predict Inputs -->
+        <div class="flex justify-center items-center gap-lg">
+          <!-- Home Counter -->
+          <div class="flex items-center border border-outline-variant rounded-xl overflow-hidden bg-surface-bright focus-within:ring-2 focus-within:ring-secondary/20 focus-within:border-secondary transition-all shadow-sm">
+            <button 
+              type="button"
+              class="px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer select-none font-bold" 
+              (click)="decrementHome()"
+              [attr.id]="'match-' + match().id + '-home-dec'">
+              -
+            </button>
+            <input 
+              class="w-14 text-center font-headline-md text-headline-md text-primary border-none p-0 focus:ring-0 bg-transparent hide-arrows font-bold" 
+              max="9" 
+              min="0" 
+              type="number" 
+              [value]="homeScoreInput()"
+              (input)="onHomeInputChange($event)"
+              [attr.id]="'match-' + match().id + '-home-input'">
+            <button 
+              type="button"
+              class="px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer select-none font-bold" 
+              (click)="incrementHome()"
+              [attr.id]="'match-' + match().id + '-home-inc'">
+              +
+            </button>
+          </div>
+
+          <span class="font-headline-md text-headline-md text-outline-variant font-bold">-</span>
+
+          <!-- Away Counter -->
+          <div class="flex items-center border border-outline-variant rounded-xl overflow-hidden bg-surface-bright focus-within:ring-2 focus-within:ring-secondary/20 focus-within:border-secondary transition-all shadow-sm">
+            <button 
+              type="button"
+              class="px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer select-none font-bold" 
+              (click)="decrementAway()"
+              [attr.id]="'match-' + match().id + '-away-dec'">
+              -
+            </button>
+            <input 
+              class="w-14 text-center font-headline-md text-headline-md text-primary border-none p-0 focus:ring-0 bg-transparent hide-arrows font-bold" 
+              max="9" 
+              min="0" 
+              type="number" 
+              [value]="awayScoreInput()"
+              (input)="onAwayInputChange($event)"
+              [attr.id]="'match-' + match().id + '-away-input'">
+            <button 
+              type="button"
+              class="px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors cursor-pointer select-none font-bold" 
+              (click)="incrementAway()"
+              [attr.id]="'match-' + match().id + '-away-inc'">
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          (click)="onSavePrediction()"
+          [class]="match().prediction 
+            ? 'mt-base bg-surface-container-high text-on-surface font-title-lg text-title-lg py-md px-lg rounded-xl hover:bg-surface-dim transition-all active:scale-[0.98] border border-outline-variant cursor-pointer font-semibold' 
+            : 'mt-base bg-secondary text-on-secondary font-title-lg text-title-lg py-md px-lg rounded-xl hover:bg-on-secondary-fixed-variant transition-all active:scale-[0.98] shadow-sm cursor-pointer font-semibold'"
+          [attr.id]="'match-' + match().id + '-save-btn'">
+          {{ match().prediction ? 'Actualizar Pronóstico' : 'Guardar Pronóstico' }}
+        </button>
+      </div>
+    } @else {
+      <!-- Locked prediction status for live or finished matches -->
+      <div class="px-lg py-md flex justify-between items-center">
+        @if (match().prediction) {
+          <span class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">
+            Tu pronóstico: {{ match().prediction?.homeScore }} - {{ match().prediction?.awayScore }}
+          </span>
+        } @else {
+          <span class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">
+            Sin pronóstico registrado
+          </span>
+        }
+        <span class="material-symbols-outlined text-outline" title="Predicción bloqueada">lock</span>
+      </div>
+    }
+  </div>
+</article>

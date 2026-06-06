@@ -1,0 +1,42 @@
+<aside class="hidden md:flex fixed left-0 top-16 bottom-0 flex-col p-md border-r border-outline-variant bg-surface-container-low dark:bg-surface-container w-64 z-40 overflow-y-auto">
+  <!-- Status Card -->
+  <div class="flex flex-col gap-sm mb-xl p-sm bg-surface-container rounded-lg border border-outline-variant/30">
+    <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Tu Estado</div>
+    <div class="font-title-lg text-title-lg text-primary font-bold">Rango Global: #{{ stats().globalRank }}</div>
+    <div class="font-mono-stats text-mono-stats text-secondary">Precisión: {{ stats().accuracy }}%</div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex flex-col gap-sm flex-grow">
+    <!-- Dashboard Link -->
+    <a routerLink="/dashboard" 
+       routerLinkActive="bg-secondary-container! text-on-secondary-container! font-bold!" 
+       [routerLinkActiveOptions]="{exact: true}" 
+       class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg px-md py-sm transition-all scale-95 active:scale-90" 
+       id="sidebar-dashboard-link">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span class="font-label-md text-label-md">Dashboard</span>
+    </a>
+
+    <!-- Settings Link -->
+    <a routerLink="/settings" 
+       routerLinkActive="bg-secondary-container! text-on-secondary-container! font-bold!" 
+       class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high hover:text-primary rounded-lg px-md py-sm transition-all scale-95 active:scale-90" 
+       id="sidebar-settings-link">
+      <span class="material-symbols-outlined">settings</span>
+      <span class="font-label-md text-label-md">Configuración</span>
+    </a>
+  </nav>
+
+  <!-- Footer actions -->
+  <div class="mt-auto flex flex-col gap-sm pt-md border-t border-outline-variant">
+    <a href="#" class="flex items-center gap-md text-on-surface-variant hover:bg-surface-container-high rounded-lg px-md py-sm transition-all scale-95 active:scale-90" id="sidebar-help-link">
+      <span class="material-symbols-outlined">help</span>
+      <span class="font-label-md text-label-md">Ayuda</span>
+    </a>
+    <a href="#" class="flex items-center gap-md text-error hover:bg-error-container hover:text-on-error-container rounded-lg px-md py-sm transition-all scale-95 active:scale-90" id="sidebar-logout-link">
+      <span class="material-symbols-outlined">logout</span>
+      <span class="font-label-md text-label-md">Cerrar Sesión</span>
+    </a>
+  </div>
+</aside>

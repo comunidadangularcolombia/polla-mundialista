@@ -1,0 +1,116 @@
+<main class="p-margin-mobile md:p-margin-desktop max-w-[1440px] mx-auto min-h-screen flex flex-col xl:flex-row gap-xl">
+  <!-- Left/Center Column: Match Cards -->
+  <div class="flex-grow flex flex-col gap-lg">
+    <header class="flex flex-col gap-sm">
+      <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight" id="dashboard-heading">
+        Próximos Partidos
+      </h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Pronostica los resultados y suma puntos en tu liga.
+      </p>
+    </header>
+
+    <!-- Filter Tabs -->
+    <div class="flex border-b border-outline-variant gap-lg overflow-x-auto no-scrollbar" role="tablist">
+      <button 
+        (click)="setTab('all')"
+        [class]="activeTab() === 'all' 
+          ? 'font-title-lg text-title-lg text-secondary border-b-2 border-secondary pb-sm px-xs whitespace-nowrap font-bold cursor-pointer' 
+          : 'font-title-lg text-title-lg pb-sm px-xs whitespace-nowrap text-on-surface-variant hover:text-primary transition-colors cursor-pointer'"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'all'"
+        id="tab-all">
+        Todos
+      </button>
+      <button 
+        (click)="setTab('scheduled')"
+        [class]="activeTab() === 'scheduled' 
+          ? 'font-title-lg text-title-lg text-secondary border-b-2 border-secondary pb-sm px-xs whitespace-nowrap font-bold cursor-pointer' 
+          : 'font-title-lg text-title-lg pb-sm px-xs whitespace-nowrap text-on-surface-variant hover:text-primary transition-colors cursor-pointer'"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'scheduled'"
+        id="tab-scheduled">
+        Programados
+      </button>
+      <button 
+        (click)="setTab('live')"
+        [class]="activeTab() === 'live' 
+          ? 'font-title-lg text-title-lg text-secondary border-b-2 border-secondary pb-sm px-xs whitespace-nowrap font-bold cursor-pointer' 
+          : 'font-title-lg text-title-lg pb-sm px-xs whitespace-nowrap text-on-surface-variant hover:text-primary transition-colors cursor-pointer'"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'live'"
+        id="tab-live">
+        En Vivo
+      </button>
+      <button 
+        (click)="setTab('finished')"
+        [class]="activeTab() === 'finished' 
+          ? 'font-title-lg text-title-lg text-secondary border-b-2 border-secondary pb-sm px-xs whitespace-nowrap font-bold cursor-pointer' 
+          : 'font-title-lg text-title-lg pb-sm px-xs whitespace-nowrap text-on-surface-variant hover:text-primary transition-colors cursor-pointer'"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'finished'"
+        id="tab-finished">
+        Finalizados
+      </button>
+    </div>
+
+    <!-- Grid Layout for Match Cards -->
+    @if (filteredMatches().length > 0) {
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter" id="matches-grid">
+        @for (match of filteredMatches(); track match.id) {
+          <pm-match-card [match]="match"></pm-match-card>
+        }
+      </div>
+    } @else {
+      <div class="flex flex-col items-center justify-center py-2xl bg-surface-container-lowest rounded-xl border border-outline-variant text-center px-lg" id="no-matches-msg">
+        <span class="material-symbols-outlined text-[48px] text-outline mb-md">sports_soccer</span>
+        <h3 class="font-title-lg text-title-lg text-on-surface font-bold">Sin partidos en esta categoría</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-sm">No hay partidos actualmente registrados para el filtro seleccionado.</p>
+      </div>
+    }
+  </div>
+
+  <!-- Right Column: User Stats Sidebar -->
+  <aside class="w-full xl:w-80 flex flex-col gap-lg xl:pt-[48px]">
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
+      <h2 class="font-headline-md text-headline-md text-primary mb-md border-b border-surface-variant pb-sm font-bold">
+        Estadísticas de Usuario
+      </h2>
+      <ul class="flex flex-col gap-md">
+        <li class="flex justify-between items-center">
+          <div class="flex items-center gap-sm text-on-surface-variant">
+            <span class="material-symbols-outlined text-outline">stars</span>
+            <span class="font-body-md text-body-md">Total Puntos</span>
+          </div>
+          <span class="font-title-lg text-title-lg text-primary font-bold" id="stats-total-points">
+            {{ stats().totalPoints | number }}
+          </span>
+        </li>
+        <li class="flex justify-between items-center">
+          <div class="flex items-center gap-sm text-on-surface-variant">
+            <span class="material-symbols-outlined text-outline">track_changes</span>
+            <span class="font-body-md text-body-md">Precisión</span>
+          </div>
+          <span class="font-mono-stats text-mono-stats text-secondary font-bold" id="stats-accuracy">
+            {{ stats().accuracy }}%
+          </span>
+        </li>
+        <li class="flex justify-between items-center">
+          <div class="flex items-center gap-sm text-on-surface-variant">
+            <span class="material-symbols-outlined text-outline">leaderboard</span>
+            <span class="font-body-md text-body-md">Rango</span>
+          </div>
+          <span class="font-title-lg text-title-lg text-primary font-bold" id="stats-rank">
+            #{{ stats().globalRank }}
+          </span>
+        </li>
+      </ul>
+      <div class="mt-lg pt-md border-t border-surface-variant">
+        <button class="flex items-center justify-center gap-sm w-full bg-surface-container-low text-on-surface font-label-md text-label-md py-sm px-md rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer" id="stats-details-btn">
+          Ver Detalles
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+</main>

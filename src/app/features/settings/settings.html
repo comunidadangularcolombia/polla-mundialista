@@ -1,0 +1,155 @@
+<main class="md:p-margin-desktop p-margin-mobile max-w-[1440px] mx-auto w-full mt-lg">
+  <header class="mb-2xl flex justify-between items-end">
+    <div>
+      <h1 class="font-display-lg text-display-lg text-primary tracking-tight" id="settings-heading">Configuración</h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mt-sm">Administra tus preferencias y seguridad de tu cuenta.</p>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+    <!-- Left Column: Settings Blocks -->
+    <div class="md:col-span-8 flex flex-col gap-xl">
+      
+      <!-- Profile Section -->
+      <section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-[0px_4px_6px_rgba(15,23,42,0.05)]" aria-labelledby="section-profile">
+        <h2 class="font-title-lg text-title-lg text-on-surface mb-lg font-bold" id="section-profile">Perfil</h2>
+        <div class="flex flex-col sm:flex-row items-start gap-lg">
+          <!-- Avatar container -->
+          <div class="relative group cursor-pointer self-center sm:self-start" id="avatar-container">
+            <img 
+              [src]="profile().avatar" 
+              alt="Foto de perfil de usuario" 
+              class="w-24 h-24 rounded-full object-cover border-2 border-surface-container-low">
+            <div class="absolute inset-0 bg-primary/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="material-symbols-outlined text-white">photo_camera</span>
+            </div>
+          </div>
+          
+          <!-- Profile details -->
+          <div class="flex-1 w-full">
+            <div class="grid grid-cols-1 gap-md">
+              <div>
+                <label class="block font-label-md text-label-md text-on-surface-variant mb-xs uppercase tracking-wider">
+                  Nombre de usuario
+                </label>
+                <input 
+                  class="w-full bg-surface-bright border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors outline-none font-medium disabled:opacity-75 disabled:bg-surface-container-low" 
+                  [disabled]="!editMode()"
+                  type="text" 
+                  [value]="nameInput()"
+                  (input)="onNameChange($event)"
+                  id="settings-username-input">
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md text-on-surface-variant mb-xs uppercase tracking-wider">
+                  Correo Electrónico
+                </label>
+                <input 
+                  class="w-full bg-surface-bright border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors outline-none font-medium disabled:opacity-75 disabled:bg-surface-container-low" 
+                  [disabled]="!editMode()"
+                  type="email" 
+                  [value]="emailInput()"
+                  (input)="onEmailChange($event)"
+                  id="settings-email-input">
+              </div>
+              <div class="pt-sm">
+                <button 
+                  (click)="toggleEdit()"
+                  [class]="editMode() 
+                    ? 'bg-secondary text-on-secondary font-label-md text-label-md px-md py-sm rounded-lg hover:bg-on-secondary-fixed-variant transition-colors cursor-pointer font-bold' 
+                    : 'bg-secondary/10 text-secondary font-label-md text-label-md px-md py-sm rounded-lg hover:bg-secondary/20 transition-colors cursor-pointer font-bold'"
+                  id="settings-edit-profile-btn">
+                  {{ editMode() ? 'Guardar Cambios' : 'Editar Perfil' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Notifications Section -->
+      <section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-[0px_4px_6px_rgba(15,23,42,0.05)]" aria-labelledby="section-notifications">
+        <h2 class="font-title-lg text-title-lg text-on-surface mb-lg font-bold" id="section-notifications">Notificaciones</h2>
+        
+        <!-- Toggle 1: LIVE Alerts -->
+        <div class="flex items-center justify-between py-md border-b border-surface-container-high last:border-0">
+          <div class="pr-sm">
+            <h3 class="font-body-md text-body-md font-bold text-on-surface">Alertas de Partidos en Vivo</h3>
+            <p class="font-body-sm text-body-md text-on-surface-variant mt-xs">
+              Recibe notificaciones cuando comiencen los partidos de tus predicciones.
+            </p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer select-none">
+            <input 
+              type="checkbox" 
+              [checked]="liveAlerts()" 
+              (change)="toggleLiveAlerts()"
+              class="sr-only peer"
+              id="toggle-live-alerts">
+            <div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#22C55E]"></div>
+          </label>
+        </div>
+
+        <!-- Toggle 2: Final Results -->
+        <div class="flex items-center justify-between py-md border-b border-surface-container-high last:border-0">
+          <div class="pr-sm">
+            <h3 class="font-body-md text-body-md font-bold text-on-surface">Resultados Finales</h3>
+            <p class="font-body-sm text-body-md text-on-surface-variant mt-xs">
+              Resumen diario de los resultados y tu puntaje obtenido.
+            </p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer select-none">
+            <input 
+              type="checkbox" 
+              [checked]="finalResults()" 
+              (change)="toggleFinalResults()"
+              class="sr-only peer"
+              id="toggle-final-results">
+            <div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#22C55E]"></div>
+          </label>
+        </div>
+      </section>
+
+      <!-- Security Section -->
+      <section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-[0px_4px_6px_rgba(15,23,42,0.05)]" aria-labelledby="section-security">
+        <h2 class="font-title-lg text-title-lg text-on-surface mb-lg font-bold" id="section-security">Seguridad</h2>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-md">
+          <div>
+            <h3 class="font-body-md text-body-md font-bold text-on-surface">Contraseña</h3>
+            <p class="font-body-sm text-body-md text-on-surface-variant mt-xs">Última actualización hace 3 meses.</p>
+          </div>
+          <button 
+            (click)="changePassword()"
+            class="border border-outline-variant text-on-surface font-label-md text-label-md px-lg py-sm rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer font-bold w-full sm:w-auto"
+            id="settings-change-password-btn">
+            Cambiar Contraseña
+          </button>
+        </div>
+
+        @if (passwordMessage()) {
+          <div class="mt-md bg-secondary-container text-on-secondary-container border border-secondary/20 rounded-lg p-md font-body-md text-center flex items-center gap-sm justify-center font-semibold" id="settings-password-feedback">
+            <span class="material-symbols-outlined text-md">check_circle</span>
+            <span>{{ passwordMessage() }}</span>
+          </div>
+        }
+      </section>
+    </div>
+
+    <!-- Right Column: Minimal Helper Area -->
+    <div class="md:col-span-4 hidden md:block">
+      <div class="bg-surface-bright rounded-xl p-lg border border-surface-container-low flex flex-col gap-md">
+        <div class="flex items-center gap-sm text-on-surface-variant">
+          <span class="material-symbols-outlined">info</span>
+          <h2 class="font-label-md text-label-md uppercase tracking-wider font-bold">Ayuda Rápida</h2>
+        </div>
+        <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Mantén tu información de contacto actualizada para no perderte premios importantes de la polla ni alertas de partidos clave.
+        </p>
+        <a href="#" class="text-secondary font-label-md text-label-md hover:underline flex items-center gap-xs font-bold" id="settings-support-link">
+          Contactar Soporte 
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
