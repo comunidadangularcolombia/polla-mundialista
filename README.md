@@ -1,5 +1,6 @@
 # PollaMundialista
 
+
 Sistema web de polla mundialista para gestionar pronósticos de partidos de fútbol, calcular puntajes automáticamente y visualizar clasificaciones en tiempo real.
 
 ## Descripción
