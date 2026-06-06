@@ -4,6 +4,21 @@
     <meta charset="utf-8">
     <title>PollaMundialista - Predicciones del Mundial</title>
     <base href="/polla-mundialista/">
+    <!-- SPA fallback: restore path encoded by 404.html redirect -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(
+            null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location));
+    </script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Dashboard de predicciones mundialistas de la comunidad Angular Colombia. Pronostica los resultados, acumula puntos y sube en la tabla general.">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
